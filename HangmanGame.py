@@ -65,21 +65,28 @@ def Main():
     print ("Welcome to Hangman! Guess the word before the unfortunate end.")
 
     guessChance = 0
-    playerList = [] # Check list for win conditions.
+    #playerList = [] # Check list for win conditions.
 
 
     while True:
 
         gameWord = ChooseRandomWord() ## random word from available list.
-
+        blankSpaces = "_" * len(gameWord)
         wordSplit = list(gameWord) # Split's the word into a list.
 
         print ("Try and guess the " + str(len(gameWord)) + " letter word.")
+        print(wordSplit)
 
         while guessChance <= 6:
 
             print(hamgmanStages[guessChance])
+            print("Secret word hint:")
+            print(blankSpaces)
+            #print("Secret Word: \n")
+            #print(blankSpaces)
+            print("Your guesses: \n")
             print (userEntries)
+            print("\n")
 
             userGuess = input("Enter a letter: ")
 
@@ -98,6 +105,7 @@ def Main():
 
                         print("Good guess!")
                         playerList.append(userGuess)
+                        blankSpaces = DrawSpaces(userGuess, gameWord, blankSpaces)
                         break
 
                     elif numCheck == 1:
@@ -105,32 +113,37 @@ def Main():
                         guessChance = guessChance + 1
                         break
 
-            if len(playerList) == len(wordSplit):
+
+            if blankSpaces == gameWord:
 
                 print("Congratualations! You win!")
                 break
 
 
+
+        if guessChance > 6:
+            print("Sorry, you lose.")
+
         playAgain = input("Do you want to play again? ")
 
-        if playAgain.lower is "y":
+        if playAgain == "y":
 
             guessChance = 0
-            userEntries.clear
-            playerList.clear
-
+            userEntries.clear()
+            playerList.clear()
 
         else:
             print("Thanks for playing")
             playing = False
-            
+            break
+
 
 
 
 
 def ChooseRandomWord():
 
-    wordList = ["cat","dog","bird","Superman","foster","culinary","onitama",
+    wordList = ["cat","dog","bird","superman","foster","culinary","onitama",
     "dictionary","python","matter","energy","collider","baseball","formula",
     "ticket","kyptonite","sanguine","byron","fitzgerald","alhambra"
     ]
@@ -152,6 +165,19 @@ def CheckEntry(guess, answer):
         userEntries.append(guess)
         return 1
 
+def DrawSpaces(guess, answer, spaces): # Checks the user answer against word and replaces
+                                        # underscores with letters for the hint.
+    blankSpaces = list(spaces)
+
+    for x,y in enumerate(blankSpaces):
+
+        if answer[x] == guess:
+
+            blankSpaces[x] = y.replace("_", guess)
+
+    spaceReturn = "".join(blankSpaces)
+
+    return spaceReturn
 
 
 Main()
