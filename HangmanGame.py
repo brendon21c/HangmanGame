@@ -65,7 +65,7 @@ def Main():
     print ("Welcome to Hangman! Guess the word before the unfortunate end.")
 
     guessChance = 0
-    #playerList = [] # Check list for win conditions.
+    playerList = [] # Check list for win conditions.
 
 
     while True:
@@ -143,14 +143,19 @@ def Main():
 
 def ChooseRandomWord():
 
-    wordList = ["cat","dog","bird","superman","foster","culinary","onitama",
-    "dictionary","python","matter","energy","collider","baseball","formula",
-    "ticket","kyptonite","sanguine","byron","fitzgerald","alhambra"
-    ]
+    wordFile = open("test.txt", "r")
 
-    randNum = random.randint(0, len(wordList) - 1)
+    wordFileList = wordFile.readlines()
 
-    selection = wordList[randNum]
+    for x,y in enumerate(wordFileList):
+        wordFileList[x] = y.replace("\n", "")
+
+    #print(wordFileList)
+
+
+    randNum = random.randint(0, len(wordFileList) - 1)
+
+    selection = wordFileList[randNum]
 
     return selection
 
