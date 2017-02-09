@@ -77,7 +77,7 @@ def main():
 def play_once():
 
     # STEP 1 set up game.
-    guessChance = 0      # The number of guesses the user has made.
+    #guessChance = 0      # The number of guesses the user has made.
 
     displayHangmanStage(guessChance)
 
@@ -94,6 +94,8 @@ def play_once():
 
         # Print status update info for user..
         print ("Try and guess the " + str(len(gameWord)) + " letter word.")
+        print(gameWord)
+        print(guessChance)
 
         displayHangmanStage(guessChance)
 
@@ -111,7 +113,7 @@ def play_once():
         # Check if user has won?
 
         # Where are we with the game state?
-        game_result, blankSpaces = update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
+        game_result = update_game_state(playerList, userGuess, gameWord)
 
         # update game word
         blankSpaces = replaceSpacesWithGuessedLetters(userGuess, gameWord, blankSpaces)
@@ -122,7 +124,10 @@ def play_once():
     print(game_result)
 
 
-def update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord):
+def update_game_state(playerList, userGuess, gameWord):
+
+        global guessChance # needed or guessChance cannot be updated.
+
 
         guess_in_word = checkEntry(userGuess, gameWord)
 
@@ -134,14 +139,14 @@ def update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
             print("Sorry, that letter is not in the word.")
             guessChance += 1
 
-        game_on = check_if_game_on(blankSpaces)
+        game_on = check_if_game_on(playerList, gameWord)
 
         return game_on
 
 
-def check_if_game_on(blankSpaces):
+def check_if_game_on(playerList, gameWord):
 
-    if blankSpaces == gameWord:
+    if len(playerList) == len(gameWord): # by checking length the game ends as soon as the User guesses right.
 
         return "Congratualations! You win!"
 
@@ -187,7 +192,7 @@ def chooseRandomWord():
 
 def checkEntry(guess, answer):
 
-    ''' Returns 0 if guess in in word '''
+    ''' Returns True if guess in in word '''
 
     userEntries.append(guess)
 
