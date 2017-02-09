@@ -45,10 +45,6 @@ class TestHangman(unittest.TestCase):
         self.assertEqual(return_val, 's')
 
 
-
-
-
-
     def test_valid_guess(self):
 
         HangmanGame.userEntries = ['a', 'b', 'c']
@@ -63,6 +59,45 @@ class TestHangman(unittest.TestCase):
 
         self.assertFalse(HangmanGame.valid_guess('AAAA'))
         self.assertFalse(HangmanGame.valid_guess('123'))
+
+
+    def test_checkEntry(self):
+
+
+        self.assertTrue(HangmanGame.checkEntry('a', 'cat'))
+        self.assertFalse(HangmanGame.checkEntry('f', 'cat'))
+
+        self.assertFalse(HangmanGame.checkEntry('A', 'cat'))
+        self.assertFalse(HangmanGame.checkEntry('123', 'cat'))
+        self.assertFalse(HangmanGame.checkEntry('fff', 'cat'))
+
+    # test function to see if blank spaces are replaced with correct letters
+    def test_replaceSpacesWithGuessedLetters(self):
+
+        word = 'need'
+        spaces = '_' * len(word)
+
+        # letter in word, shold pass.
+
+        return_val = HangmanGame.replaceSpacesWithGuessedLetters('e', word, spaces)
+
+        self.assertEqual(return_val, '_ee_')
+
+        # letter not in word, should pass.
+
+        return_val = HangmanGame.replaceSpacesWithGuessedLetters('f', word, spaces)
+
+        self.assertEqual(return_val, spaces)
+
+    def test_update_game_state(self):
+
+        
+
+
+
+
+
+
 
 
 

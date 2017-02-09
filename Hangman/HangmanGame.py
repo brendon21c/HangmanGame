@@ -60,6 +60,12 @@ userEntries = [] ## Everything the user has guessed already.
 
 guesses_allowed = len(hangmanStages) - 1
 
+guessChance = 0      # The number of guesses the user has made.
+
+gameWord = '' # Blank word to start with, will be replaced with random in game setup.
+
+
+
 def main():
 
     print ("Welcome to Hangman! Guess the word before the unfortunate end.")
@@ -105,7 +111,7 @@ def play_once():
         # Check if user has won?
 
         # Where are we with the game state?
-        game_result, guessChance, blankSpaces = update_game_state(guessChance, gameWord, blankSpaces, playerList, userGuess)
+        game_result, blankSpaces = update_game_state(blankSpaces, playerList, userGuess)
 
         # update game word
         blankSpaces = replaceSpacesWithGuessedLetters(userGuess, gameWord, blankSpaces)
@@ -116,7 +122,7 @@ def play_once():
     print(game_result)
 
 
-def update_game_state(guessChance, gameWord, blankSpaces, playerList, userGuess):
+def update_game_state(blankSpaces, playerList, userGuess):
 
         guess_in_word = checkEntry(userGuess, gameWord)
 
@@ -128,15 +134,21 @@ def update_game_state(guessChance, gameWord, blankSpaces, playerList, userGuess)
             print("Sorry, that letter is not in the word.")
             guessChance += 1
 
-        if blankSpaces == gameWord:
+        game_on = check_if_game_on(blankSpaces)
 
-            return "Congratualations! You win!", guessChance
+        return game_on
 
-        if guessChance > guesses_allowed:
-            return "Sorry, you lose.", guessChance
 
-        return "game on", guessChance
+def check_if_game_on(blankSpaces):
 
+    if blankSpaces == gameWord:
+
+        return "Congratualations! You win!"
+
+    if guessChance > guesses_allowed:
+        return "Sorry, you lose."
+
+    return "game on"
 
 
 #
