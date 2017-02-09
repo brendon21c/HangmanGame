@@ -3,16 +3,9 @@ from unittest.mock import patch
 from Hangman import HangmanGame
 
 
-#TODO I cannot seem to figure out where to go from here.
 
 class TestHangman(unittest.TestCase):
 
-    # @patch('HangmanGame.ChooseRandomWord', return_value = "cat")
-    # @patch('HangmanGame.get_guess', side_effect = ["c","a","p","t"])
-    # @patch('HangmanGame.check_if_user_guessed', side_effect = ["c","a","p","t"])
-    # @patch('HangmanGame.CheckEntry', side_effect = [0, 0, 1, 0]) # 0 is a correct guess, 1 is a fail.
-    # def test_hangman(self, ):
-    #     pass
 
 
     def test_get_guess(self):
@@ -89,44 +82,21 @@ class TestHangman(unittest.TestCase):
 
         self.assertEqual(return_val, spaces)
 
-    # Testing to see if the game will continue
+    # Testing game win conditions or if it will continue
     def test_update_game_state(self):
 
         gameWord = 'need'
         userGuess = 'd'
-        playerList = ['e']
-
-        blankSpaces = '_ee_'
+        playerList = ['e','e','n']
 
         guessChance = 0
 
-        return_val = HangmanGame.update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
-
-        # Should fail
-        expected_result_fail = "Congratualations! You win!"
-
-        self.assertEqual(return_val, expected_result_fail)
-
-
-        return_val = HangmanGame.update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
+        return_val = HangmanGame.update_game_state(playerList, userGuess, gameWord)
 
         # Should pass
-        expected_result_pass = "game on"
+        expected_result_win = "Congratualations! You win!"
 
-        self.assertEqual(return_val, expected_result_pass)
-
-
-
-
-
-
-
-
-
-
-
-
-        # HangmanGame.check_if_user_guessed('a')
+        self.assertEqual(return_val, expected_result_win)
 
 
 
