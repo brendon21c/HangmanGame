@@ -2,7 +2,7 @@
 import random
 
 # I looked up this list on stacksocial, I couldn't think of how to do it.
-hamgmanStages = ['''
+hangmanStages = ['''
     +---+
     |   |
         |
@@ -56,11 +56,11 @@ hamgmanStages = ['''
 
 ]
 
-userEntries = [] ## List to catalog the user's entries.
+userEntries = [] ## Everything the user has guessed already.
 
+guesses_allowed = len(hangmanStages) - 1
 
-
-def Main():
+def main():
 
     print ("Welcome to Hangman! Guess the word before the unfortunate end.")
 
@@ -70,69 +70,102 @@ def Main():
 # This is one full round of the game with as many methods as I could think of.
 def play_once():
 
-    guessChance = 0
-    playerList = [] # Check list for win conditions.
-    gameWord = ChooseRandomWord() ## random word from available list.
-    blankSpaces = "_" * len(gameWord)
-    wordSplit = list(gameWord) # Split's the word into a list.
+    # STEP 1 set up game.
+    guessChance = 0      # The number of guesses the user has made.
 
+    displayHangmanStage(guessChance)
+
+    playerList = [] # A list of letters that the player has guessed that were are in the word.
+    gameWord = chooseRandomWord() ## random word from available list.
+
+    # displayWordStatus(gameWord)
+
+    blankSpaces = "_" * len(gameWord)
+
+    # Step two : play game
 
     while True:
 
-
+        # Print status update info for user..
         print ("Try and guess the " + str(len(gameWord)) + " letter word.")
 
-        print(hamgmanStages[guessChance])
+        displayHangmanStage(guessChance)
+
         print("Secret word hint:")
-        print(blankSpaces)
+        print(blankSpaces)           # Game logic here - TODO test
         print("Your guesses: \n")
-        print (userEntries)
+        print (userEntries)           # TODO maybe test this ?
         print("\n")
 
+        # Get user guess (also validation)
         userGuess = get_guess()
 
-        check_if_user_guessed(userGuess)
+        # Report results to user
+        # Change score
+        # Check if user has won?
 
-        numCheck = CheckEntry(userGuess, gameWord)
+        # Where are we with the game state?
+        game_result, guessChance, blankSpaces = update_game_state(guessChance, gameWord, blankSpaces, playerList, userGuess)
 
-        if numCheck == 0:
+        # update game word
+        blankSpaces = replaceSpacesWithGuessedLetters(userGuess, gameWord, blankSpaces)
 
+        if not game_result == 'game on':
+            break
+
+    print(game_result)
+
+
+def update_game_state(guessChance, gameWord, blankSpaces, playerList, userGuess):
+
+        guess_in_word = checkEntry(userGuess, gameWord)
+
+        if guess_in_word:
             print("Good guess!")
             playerList.append(userGuess)
-            blankSpaces = DrawSpaces(userGuess, gameWord, blankSpaces)
 
-        elif numCheck == 1:
-
-            guessChance = guessChance + 1
+        else:
+            print("Sorry, that letter is not in the word.")
+            guessChance += 1
 
         if blankSpaces == gameWord:
 
-            print("Congratualations! You win!")
-            break
+            return "Congratualations! You win!", guessChance
 
-        if guessChance > 6:
-            print("Sorry, you lose.")
-            break
+        if guessChance > guesses_allowed:
+            return "Sorry, you lose.", guessChance
 
-
+        return "game on", guessChance
 
 
-def check_if_user_guessed(userGuess):
 
-    if userGuess in userEntries:
+#
+# def check_if_user_guessed(userGuess):
+#
+#     if userGuess in userEntries:
+#
+#         print("Sorry, you have guessed that letter.")
+#         userGuess = input("Try again: ")
+#
+#     return userGuess
 
-        print("Sorry, you have guessed that letter.")
-        userGuess = input("Try again: ")
+def valid_guess(userGuess):
+    return not userGuess in userEntries
 
-    return userGuess
 
 def get_guess():
 
     userGuess = input("Enter a letter: ")
 
+    while not valid_guess(userGuess,):
+        # check_if_user_guessed(userGuess)    # Testing for duplicate guesses
+        print("You already guessed that")
+        userGuess = input("Enter a letter: ")
+
     return userGuess
 
-def ChooseRandomWord():
+
+def chooseRandomWord():
 
     wordFile = open("test.txt", "r")
 
@@ -143,25 +176,27 @@ def ChooseRandomWord():
 
     #print(wordFileList)
 
-
     randNum = random.randint(0, len(wordFileList) - 1)
 
     selection = wordFileList[randNum]
 
     return selection
 
-def CheckEntry(guess, answer):
+
+def checkEntry(guess, answer):
+
+    ''' Returns 0 if guess in in word '''
+
+    userEntries.append(guess)
 
     if guess in answer:
-        userEntries.append(guess)
-        return 0
+        return True
 
     else:
-        print("Sorry, that letter is not in the word.")
-        userEntries.append(guess)
-        return 1
+        return False
 
-def DrawSpaces(guess, answer, spaces): # Checks the user answer against word and replaces
+
+def replaceSpacesWithGuessedLetters(guess, answer, spaces): # Checks the user answer against word and replaces
                                         # underscores with letters for the hint.
     blankSpaces = list(spaces)
 
@@ -176,4 +211,10 @@ def DrawSpaces(guess, answer, spaces): # Checks the user answer against word and
     return spaceReturn
 
 
-Main()
+def displayHangmanStage(guessChance):
+    print(hangmanStages[guessChance])
+
+
+
+if __name__ == '__main__':
+    main()
