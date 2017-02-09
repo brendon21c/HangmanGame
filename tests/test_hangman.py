@@ -89,10 +89,31 @@ class TestHangman(unittest.TestCase):
 
         self.assertEqual(return_val, spaces)
 
+    # Testing to see if the game will continue
     def test_update_game_state(self):
 
-        
+        gameWord = 'need'
+        userGuess = 'd'
+        playerList = ['e']
 
+        blankSpaces = '_ee_'
+
+        guessChance = 0
+
+        return_val = HangmanGame.update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
+
+        # Should fail
+        expected_result_fail = "Congratualations! You win!"
+
+        self.assertEqual(return_val, expected_result_fail)
+
+
+        return_val = HangmanGame.update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
+
+        # Should pass
+        expected_result_pass = "game on"
+
+        self.assertEqual(return_val, expected_result_pass)
 
 
 

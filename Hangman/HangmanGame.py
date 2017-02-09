@@ -111,7 +111,7 @@ def play_once():
         # Check if user has won?
 
         # Where are we with the game state?
-        game_result, blankSpaces = update_game_state(blankSpaces, playerList, userGuess)
+        game_result, blankSpaces = update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord)
 
         # update game word
         blankSpaces = replaceSpacesWithGuessedLetters(userGuess, gameWord, blankSpaces)
@@ -122,7 +122,7 @@ def play_once():
     print(game_result)
 
 
-def update_game_state(blankSpaces, playerList, userGuess):
+def update_game_state(blankSpaces, playerList, userGuess, guessChance, gameWord):
 
         guess_in_word = checkEntry(userGuess, gameWord)
 
@@ -150,16 +150,6 @@ def check_if_game_on(blankSpaces):
 
     return "game on"
 
-
-#
-# def check_if_user_guessed(userGuess):
-#
-#     if userGuess in userEntries:
-#
-#         print("Sorry, you have guessed that letter.")
-#         userGuess = input("Try again: ")
-#
-#     return userGuess
 
 def valid_guess(userGuess):
     return not userGuess in userEntries
